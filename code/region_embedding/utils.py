@@ -91,8 +91,9 @@ def accuracy(preds, labels):
 def evaluate_preds(preds, gamma, sample_num, labels, indices):
     split_loss = list()
     split_acc = list()
-    f = open(data_file+"grid_score.txt", "r", encoding="utf-8")#grid credit score
-    X_score = np.array(eval(f.read()))
+    f = open(data_file+"grid_ratio.txt", "r")#grid credit score
+    X_score = eval(f.read())
+    X_score = np.array(list(X_score.keys()))
     f.close()
     for y_split, idx_split in zip(labels, indices):
         los = loss_RE(preds[1], X_score, idx_split, sample_num)

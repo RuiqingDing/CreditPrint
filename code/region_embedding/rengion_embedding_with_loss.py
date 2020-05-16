@@ -1,17 +1,16 @@
 from __future__ import division
-import pandas as pd
+import numpy as np
 import networkx as nx
+from graph import GraphConvolution
+from utils import *
+from graph_attention_layer import GraphAttention
 from loss import embed_loss
 import keras.backend as K
-from keras.layers import Input, Dropout, Average, Dense, Concatenate, Lambda
+from keras.layers import Input, Dropout, Average, Dense, Lambda
 from keras.models import Model
 from keras.optimizers import Adam
 from keras.regularizers import l2
 from keras.utils import to_categorical
-
-from graph import GraphConvolution
-from utils import *
-from graph_attention_layer import GraphAttention
 
 data_file = "../data/"
 def convert_to_dict(filename):
@@ -28,15 +27,11 @@ def read_graph():
     G_cor = nx.read_gml(data_file+"correlation_graph.gml")
     order = sorted(list(G_inter.nodes()))
 
-    data = pd.read_excel(data_file+"grid_info.xlsx")
-    data["grid"] = data["grid"].astype("str")
-    grid_dict = dict()
-    for index, row in data.iterrows():
-        grid = row["grid"]
-        grid_dict[grid] = row["default_ratio"]
+    grid_dict = convert_to_dict(data_file+"grid_ratio.txt")
 
-    data = data[data.grid.isin(order)].sort_values(by="grid", ascending=True)
-    labels = data["default_ratio"].tolist()
+    labels = []
+    for grid in order:
+        labels.append(grid_dict[grid])
 
     # replace label value to 0 and 1
     y = []

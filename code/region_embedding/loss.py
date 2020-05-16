@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# @Time    : 2019/9/2 17:50
-# @Author  : Ruiqing Ding
-# @Contact : RuiqingDing@outlook.com
-# @File    : loss2.py
-# @Software: PyCharm
 import numpy as np
 import keras.backend as K
 import tensorflow as tf
@@ -22,8 +15,9 @@ def embed_loss2(embed_pred, embed_y):
     grid_num = 1865
     sample_idx = range(grid_num)
 
-    f = open(data_file+"grid_score.txt", "r")#grid credit score
-    X_score = np.array(eval(f.read()))
+    f = open(data_file+"grid_ratio.txt", "r")#grid credit score
+    X_score = eval(f.read())
+    X_score = np.array(list(X_score.keys()))
     f.close()
 
     def calculate_loss(sample_idx, sample_num, embed):
@@ -34,7 +28,7 @@ def embed_loss2(embed_pred, embed_y):
             x = K.transpose(x)
 
             credit = X_score[i]
-            if credit > 0.39:
+            if credit > 0.39: # 0.39 is the median of credit scores of all grids
                 range_down = max(credit - delta, 0.39)
                 range_up = credit + delta
                 pos_candidates = np.argwhere((X_score > range_down) & (X_score < range_up))
@@ -92,6 +86,4 @@ def embed_loss2(embed_pred, embed_y):
         return K.mean(losses)/sample_num
 
     loss_pred = calculate_loss(sample_idx, sample_num, embed_pred)
-    # loss_y = calculate_loss(sample_idx,sample_num, embed_y)
-    # return loss_y - loss_pred
     return loss_pred
