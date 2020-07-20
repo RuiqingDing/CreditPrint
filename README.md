@@ -6,10 +6,7 @@ Facilitating inclusive financial services for increasing overall social good is 
 
 ## Experiment Platform Requirement
 
-Server: NVIDIA TESLA
-V100 (32G RAM)
-
-Operating system: Ubuntu 18.04
+All experiments were run on a cloud service platform (https://www.bitahub.com/) with one GTX1080Ti (16G RAM). 
 
 Python version: 3.6
 
